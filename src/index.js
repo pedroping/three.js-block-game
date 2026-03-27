@@ -1,3 +1,6 @@
+import * as CANNON from "@cocos/cannon";
+import * as THREE from 'three';
+
 window.focus();
 
 let camera, scene, renderer, world, lastTime;
