@@ -1,5 +1,5 @@
 import * as CANNON from "@cocos/cannon";
-import * as THREE from 'three';
+import * as THREE from "three";
 
 window.focus();
 
@@ -54,9 +54,42 @@ window.addEventListener("click", () => {
       const nextDirection = direction == "x" ? "z" : "x";
 
       addLayer(nextX, nextZ, newWidth, newDepth, nextDirection);
+
+      return;
     }
+
+    restartGame();
   }
 });
+
+function restartGame() {
+  document.body.removeChild(renderer.domElement);
+
+  scene.clear();
+  renderer.clear();
+  renderer.resetState();
+  renderer.dispose();
+  renderer?.info?.reset?.();
+
+  while (world.bodies.length > 0) {
+    world.removeBody(world.bodies[0]);
+  }
+
+  while (world.constraints.length > 0) {
+    world.removeConstraint(world.constraints[0]);
+  }
+
+  camera = undefined;
+  scene = undefined;
+  renderer = undefined;
+  world = undefined;
+  lastTime = 0;
+  stack = [];
+  overhangs = [];
+  gameStarted = false;
+
+  init();
+}
 
 function init() {
   world = new CANNON.World();
@@ -156,7 +189,7 @@ function updatePhysics() {
     }
 
     if (element.lightness < 1.0) {
-      element.lightness += 0.01;
+      element.lightness += 0.001;
     }
 
     element.threejs.material.color.setHSL(
